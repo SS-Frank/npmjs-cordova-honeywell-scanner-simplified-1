@@ -1,4 +1,3 @@
-cordova.define("cordova-honeywell-scanner-simplified.HoneywellScannerPlugin", function(require, exports, module) {
 var execute = require("cordova/exec");
 
 var honeywell = {
@@ -35,6 +34,4 @@ var honeywell = {
 };
 
 module.exports = honeywell;
-
-});
     
