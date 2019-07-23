@@ -153,7 +153,6 @@ public class HoneywellScannerPlugin extends CordovaPlugin implements BarcodeRead
     @Override
     public void onBarcodeEvent(BarcodeReadEvent barcodeReadEvent) {
         String barcodeData = barcodeReadEvent.getBarcodeData();
-        System.out.println(barcodeData);
         if (this.callbackContext != null) {
             PluginResult result = new PluginResult(PluginResult.Status.OK, barcodeData);
             result.setKeepCallback(true);
