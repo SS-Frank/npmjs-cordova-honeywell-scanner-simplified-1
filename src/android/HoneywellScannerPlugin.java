@@ -37,6 +37,7 @@ public class HoneywellScannerPlugin extends CordovaPlugin implements BarcodeRead
             public void onCreated(AidcManager aidcManager) {
                 manager = aidcManager;
                 barcodeReader = manager.createBarcodeReader();
+
                 if (barcodeReader != null) {
                     barcodeReader.addBarcodeListener(HoneywellScannerPlugin.this);
                     try {
@@ -73,7 +74,25 @@ public class HoneywellScannerPlugin extends CordovaPlugin implements BarcodeRead
                     NotifyError("ScannerNotClaimedException");
                 } catch (ScannerUnavailableException e) {
                     e.printStackTrace();
-                 NotifyError("ScannerUnavailableException");
+                    NotifyError("ScannerUnavailableException");
+                }
+            }
+        } else if (action.equals("disableLaunchBrowser")) {
+            if (barcodeReader != null) {
+                try {
+                    barcodeReader.setProperty(BarcodeReader.PROPERTY_DATA_PROCESSOR_LAUNCH_BROWSER, false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    NotifyError("PROPERTY_DATA_PROCESSOR_LAUNCH_BROWSER-EXCEPTION");
+                }
+            }
+        } else if (action.equals("enableLaunchBrowser")) {
+            if (barcodeReader != null) {
+                try {
+                    barcodeReader.setProperty(BarcodeReader.PROPERTY_DATA_PROCESSOR_LAUNCH_BROWSER, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    NotifyError("PROPERTY_DATA_PROCESSOR_LAUNCH_BROWSER-EXCEPTION");
                 }
             }
         } else if (action.equals("listen") ) {
@@ -89,7 +108,7 @@ public class HoneywellScannerPlugin extends CordovaPlugin implements BarcodeRead
                     NotifyError("ScannerNotClaimedException2");
                 } catch (ScannerUnavailableException e) {
                     e.printStackTrace();
-                     NotifyError("ScannerUnavailableException2");
+                    NotifyError("ScannerUnavailableException2");
                 }
             }
         } else if (action.equals("claim")) {
@@ -133,8 +152,10 @@ public class HoneywellScannerPlugin extends CordovaPlugin implements BarcodeRead
 
     @Override
     public void onBarcodeEvent(BarcodeReadEvent barcodeReadEvent) {
+        String barcodeData = barcodeReadEvent.getBarcodeData();
+        System.out.println(barcodeData);
         if (this.callbackContext != null) {
-            PluginResult result = new PluginResult(PluginResult.Status.OK, barcodeReadEvent.getBarcodeData());
+            PluginResult result = new PluginResult(PluginResult.Status.OK, barcodeData);
             result.setKeepCallback(true);
             this.callbackContext.sendPluginResult(result);
         }

@@ -1,3 +1,4 @@
+cordova.define("cordova-honeywell-scanner-simplified.HoneywellScannerPlugin", function(require, exports, module) {
 var execute = require("cordova/exec");
 
 var honeywell = {
@@ -6,6 +7,12 @@ var honeywell = {
     },
     softwareTriggerStop: function () {
         return execute(null, null, 'HoneywellScannerPlugin', 'softwareTriggerStop', []);
+    },
+    disableLaunchBrowser: function () {
+        return execute(null, null, 'HoneywellScannerPlugin', 'disableLaunchBrowser', []);
+    },
+    enableLaunchBrowser: function () {
+        return execute(null, null, 'HoneywellScannerPlugin', 'enableLaunchBrowser', []);
     },
     nativeListen: function (res, err) {
         return execute(res, err, 'HoneywellScannerPlugin', 'listen', []);
@@ -28,3 +35,6 @@ var honeywell = {
 };
 
 module.exports = honeywell;
+
+});
+    
