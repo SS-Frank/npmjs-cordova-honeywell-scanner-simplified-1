@@ -3,6 +3,8 @@ package com.icsfl.rfsmart.honeywell;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.List;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
@@ -11,11 +13,13 @@ import org.apache.cordova.PluginResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.honeywell.aidc.AidcManager;
 import com.honeywell.aidc.AidcManager.CreatedCallback;
 import com.honeywell.aidc.BarcodeFailureEvent;
 import com.honeywell.aidc.BarcodeReadEvent;
+import com.honeywell.aidc.BarcodeReaderInfo;
 import com.honeywell.aidc.BarcodeReader;
 import com.honeywell.aidc.ScannerUnavailableException;
 import com.honeywell.aidc.ScannerNotClaimedException;
@@ -146,6 +150,46 @@ public class HoneywellScannerPlugin extends CordovaPlugin implements BarcodeRead
                      NotifyError("ScannerUnavailableException2");
                 }
             }
+         } else if ("listConnectedBarcodeDevices".equals(action)) {
+            // Return the list of connected barcode Devices
+
+            JSONObject obj = new JSONObject();
+            JSONArray arrayDevices = new JSONArray();
+            JSONObject objReader = new JSONObject();
+
+            if (manager == null) {
+                this.callbackContext = callbackContext;
+                obj.put("devices", arrayDevices);
+                PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
+                result.setKeepCallback(true);
+                this.callbackContext.sendPluginResult(result);
+            } else {
+                this.cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        List<BarcodeReaderInfo> list = manager.listConnectedBarcodeDevices();
+
+                        try {
+                            int index = 0;
+
+                            for (BarcodeReaderInfo value : list) {
+//                                JSONObject objReader = new JSONObject();
+                                objReader.put("name", value.getFriendlyName());
+
+                                objReader.put("id", value.getName());
+
+                                arrayDevices.put(objReader);
+                                index++;
+                            }
+
+                            obj.put("devices", arrayDevices);
+                            callbackContext.success(obj);
+                        } catch (Exception x) {
+                            callbackContext.error(x.getMessage());
+                        }
+                    }
+                });
+            }
+            return true;
          }
         return true;
     }

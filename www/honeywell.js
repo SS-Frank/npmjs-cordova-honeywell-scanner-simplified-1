@@ -30,8 +30,10 @@ var honeywell = {
     },
     claim: function () { // DEPRECATION WARNING: This will be removed in the next major release, use nativeRelease
         return execute(null, null, 'HoneywellScannerPlugin', 'claim', []);
+    },
+    listConnectedBarcodeDevices: function (res, err) {
+        return execute(res, err, 'HoneywellScannerPlugin', 'listConnectedBarcodeDevices', []);
     }
 };
 
 module.exports = honeywell;
-    
